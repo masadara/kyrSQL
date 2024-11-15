@@ -14,18 +14,20 @@ class DBManager:
 
     def create_database(self):
         """Создает базу данных, если она не существует"""
-        db_name = self.db_params['dbname']
+        db_name = self.db_params["dbname"]
 
         conn = psycopg2.connect(
-            host=self.db_params['host'],
-            user=self.db_params['user'],
-            password=self.db_params['password']
+            host=self.db_params["host"],
+            user=self.db_params["user"],
+            password=self.db_params["password"],
         )
 
         conn.autocommit = True
         with conn.cursor() as cursor:
             try:
-                cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name)))
+                cursor.execute(
+                    sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name))
+                )
                 print(f"База данных '{db_name}' успешно создана.")
             except psycopg2.errors.DuplicateDatabase:
                 print(f"База данных '{db_name}' уже существует.")

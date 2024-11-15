@@ -1,12 +1,16 @@
 from src.DBManager import DBManager
 from src.hh_api import get_vacancies_for_company
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 db_params = {
-    "dbname": "kyrsql",
-    "user": "postgres",
-    "password": "563167972268qq",
-    "host": "localhost",
-    "port": "5432",
+    "dbname": os.getenv("dbname"),
+    "user": os.getenv("user"),
+    "password": os.getenv("password"),
+    "host": os.getenv("host"),
+    "port": os.getenv("port"),
 }
 
 companies = [
