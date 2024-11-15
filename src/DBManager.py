@@ -1,4 +1,5 @@
 import psycopg2
+from psycopg2 import sql
 
 
 class DBManager:
@@ -6,8 +7,30 @@ class DBManager:
 
     def __init__(self, db_params):
         """Инициализация класса и подключение к базе данных"""
+        self.db_params = db_params
+        self.create_database()
         self.conn = psycopg2.connect(**db_params)
         self.create_tables()
+
+    def create_database(self):
+        """Создает базу данных, если она не существует"""
+        db_name = self.db_params['dbname']
+
+        conn = psycopg2.connect(
+            host=self.db_params['host'],
+            user=self.db_params['user'],
+            password=self.db_params['password']
+        )
+
+        conn.autocommit = True
+        with conn.cursor() as cursor:
+            try:
+                cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(db_name)))
+                print(f"База данных '{db_name}' успешно создана.")
+            except psycopg2.errors.DuplicateDatabase:
+                print(f"База данных '{db_name}' уже существует.")
+
+        conn.close()
 
     def create_tables(self):
         """Создает таблицы в базе данных, если они не существуют"""
